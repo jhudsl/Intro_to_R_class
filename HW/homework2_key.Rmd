@@ -1,15 +1,17 @@
 ---
 title: '**KEY** Introduction to R: Homework 2'
-author: "Originally authored by [Andrew Jaffe](http://aejaffe.com/)"
 output:
   html_document: default
 ---
 
 ### **Instructions**
-1. You must submit both the RMD and "knitted" HTML files as one compressed .zip to the Homework 2 Drop Box on CoursePlus.<br />
-2. All assignments are due by the end of the grading period for this term (25 June 2021).
+
+1. Please submit your filled out .Rmd file to the assignment drop box on CoursePlus: https://courseplus.jhu.edu/core/index.cfm/go/db:assignment.submit/assignmentID/40988/coID/16733/ 
+
+2. All assignments are due by the end of the grading period for this term (Wednesday, Jan 26, 2022 at 11:59pm EST). Please reach out to us if you need help before this time!
 
 ### **Getting Started**
+
 In this assignment, we will be working with a dataset from the "Kaggle" website, which hosts competitions for prediction and machine learning. More details on this dataset are here: https://www.kaggle.com/c/DontGetKicked/overview/background.
 
 ```{r initiatePackages, message=FALSE}
@@ -23,49 +25,87 @@ library(tidyr)
 
 ### **Problem Set**
 
-1) Get the dataset: https://jhudatascience.org/intro_to_r/data/kaggleCarAuction.csv.<br />
-Read the data set in using `read_csv()` and name the dataset "cars".
-
-```{r q1, message=FALSE}
-cars = read_csv(
-  "https://jhudatascience.org/intro_to_r/data/kaggleCarAuction.csv",
-  col_types = cols(VehBCost = col_double())
-  )
-```
-
-2) Import the "dictionary" from https://jhudatascience.org/intro_to_r/data/Carvana_Data_Dictionary_formatted.txt.<br />
-Use the `read_tsv()` function and name it "key". 
-
-```{r q2, message=FALSE}
-key = read_tsv("https://jhudatascience.org/intro_to_r/data/Carvana_Data_Dictionary_formatted.txt")
-```
-
-3) (Optional) What would you do if the data was formatted with spaces and tabs and such, like this one: https://jhudatascience.org/intro_to_r/data/Carvana_Data_Dictionary.txt<br /> 
-**Hint:** see the `readLines()` function.
+1) Make a new variable:
+  - Type out your birthday in day-month-year format (1-Jan) and assign it to a new variable "bday".
+  - Make an kind of comment to yourself anywhere in this code chunk (such as a suggestion to add the year later).
 
 ```{r}
-dict = readLines("https://jhudatascience.org/intro_to_r/data/Carvana_Data_Dictionary.txt")
-dict = dict[ !dict %in% "" ]
-dict = strsplit(dict, split = "\t")
-dict = sapply(dict, function(x) {
-  if (length(x) == 1) {
-    # split on long spaces
-    x = strsplit(x, split = "   ")[[1]]
-  }
-  x = trimws(x)
-  x = x[ !x %in% ""]
-  x
-})
-dict = t(dict)
-colnames(dict) = dict[1,]
-dict = dict[-1,]
-dict = tibble::as_tibble(dict)
+bday <- "5-Nov"
+# We should probably add the year later
 ```
 
-4) Save the key and data in an .rda file so you can access the data offline using the `save()` function. 
+2) Combine "bday" with a character string that contains your name. Name this newly combined variable "me".
+
+```{r}
+name <- "Guy Fawkes"
+me <- c(bday, name)
+
+# OR
+
+me <- c(bday, "Guy Fawkes")
+```
+
+3) Determine the data class for "me".
+
+```{r}
+class(me)
+# The class is "character"
+```
+
+4) If I want to do `me / 2` I get the following error: "Error in me/2 : non-numeric argument to binary operator". Why? Include your answer in a comment inside the R chunk.
+
+```{r}
+# R cannot perform operations (math) on character data.
+```
+
+**Now let's move to the dataset.**
+
+5) Get the dataset: https://jhudatascience.org/intro_to_R_class/data/kaggleCarAuction.csv. You can use the link, download it, or use whatever method you like for getting the file. Read the data set in using `read_csv()` and name the dataset "cars".
+
+```{r}
+cars <- read_csv("https://jhudatascience.org/intro_to_R_class/data/kaggleCarAuction.csv")
+
+# OR
+
+url <- "https://jhudatascience.org/intro_to_R_class/data/kaggleCarAuction.csv"
+cars <- read_csv(url)
+
+# OR
+
+download.file("https://jhudatascience.org/intro_to_R_class/data/kaggleCarAuction.csv",
+              destfile = "cars_data.csv",
+              overwrite = TRUE, 
+              mode = "wb")
+cars <- read_csv("cars_data.csv")
+```
+
+6) Import the data "dictionary" from https://jhudatascience.org/intro_to_R_class/data/Carvana_Data_Dictionary_formatted.txt. Use the `read_tsv()` function and name this data "key". 
+
+```{r}
+key <- read_tsv("https://jhudatascience.org/intro_to_R_class/data/Carvana_Data_Dictionary_formatted.txt")
+
+# OR
+
+download.file("https://jhudatascience.org/intro_to_R_class/data/Carvana_Data_Dictionary_formatted.txt",
+              destfile = "dict.txt",
+              overwrite = TRUE, 
+              mode = "wb")
+key <- read_tsv("dict.txt")
+```
+
+7) Save the `cars` data in an .rds file so you can access the data later. Use the `write_rds()` function.
 
 ```{r q4}
-save(cars, key, file = "kaggle.rda")
+write_rds(cars, file = "kaggle.rds")
+```
+
+8) The first three columns of the cars data are "RefId", "IsBadBuy", and "PurchDate". Retrieve the full column specification for this data so that you can see what class type these columns are (e.g., col_character(), col_double()). Write these first three specifications in a comment.
+
+```{r}
+spec(cars)
+# RefId = col_double()
+# IsBadBuy = col_double()
+# PurchDate = col_character()
 ```
 
 5) How many cars are in the dataset? How many variables are recorded for each car?
