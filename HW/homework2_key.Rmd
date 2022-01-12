@@ -108,14 +108,12 @@ spec(cars)
 # PurchDate = col_character()
 ```
 
-5) How many cars are in the dataset? How many variables are recorded for each car?
+9) How many cars are in the dataset? How many variables are recorded for each car? Show the code you'd use to figure this out.
 
 ```{r q5}
-dim(cars)
-nrow(cars)
+dim(cars) # cars = the number of rows and variables = the number of columns
+nrow(cars) # There are `nrow(cars)` observations in the dataset.
 ```
-
-There are `r nrow(cars)` observations in the dataset.
 
 6) What is the range of the manufacturer's years of the vehicles? Use "VehYear".
 
