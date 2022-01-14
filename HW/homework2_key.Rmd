@@ -6,7 +6,7 @@ output:
 
 ### **Instructions**
 
-1. Please submit your filled out .Rmd file to the assignment drop box on CoursePlus: https://courseplus.jhu.edu/core/index.cfm/go/db:assignment.submit/assignmentID/40988/coID/16733/ 
+1. Please submit your filled out `.Rmd` file to the assignment drop box on CoursePlus: https://courseplus.jhu.edu/core/index.cfm/go/db:assignment.submit/assignmentID/40988/coID/16733/ 
 
 2. All assignments are due by the end of the grading period for this term (Wednesday, Jan 26, 2022 at 11:59pm EST). Please reach out to us if you need help before this time!
 
@@ -34,11 +34,10 @@ name <- "Bruce Wayne"
 me <- c(bday, name)
 ```
 
-3) Determine the data class for "me".
+3\. Determine the data class for "me".
 
 ```{r}
 class(me)
-# The class is "character"
 ```
 
 <span style="color:red"> The class for "me" is `r class(me)`. </span>
@@ -57,14 +56,10 @@ We will be working with a dataset from the "Kaggle" website, which hosts competi
 
 ```{r}
 cars <- read_csv("https://jhudatascience.org/intro_to_R_class/data/kaggleCarAuction.csv")
-
 # OR
-
 url <- "https://jhudatascience.org/intro_to_R_class/data/kaggleCarAuction.csv"
 cars <- read_csv(url)
-
 # OR
-
 download.file("https://jhudatascience.org/intro_to_R_class/data/kaggleCarAuction.csv",
               destfile = "cars_data.csv",
               overwrite = TRUE, 
@@ -76,9 +71,7 @@ cars <- read_csv("cars_data.csv")
 
 ```{r}
 key <- read_tsv("https://jhudatascience.org/intro_to_R_class/data/Carvana_Data_Dictionary_formatted.txt")
-
 # OR
-
 download.file("https://jhudatascience.org/intro_to_R_class/data/Carvana_Data_Dictionary_formatted.txt",
               destfile = "dict.txt",
               overwrite = TRUE, 
@@ -88,14 +81,14 @@ key <- read_tsv("dict.txt")
 
 7\. R can save individual variables as `.rds` files that can be imported again later. Save the "cars" data in an .rds file using the `write_rds()` function.
 
-```{r q4}
+```{r}
 write_rds(cars, file = "kaggle.rds")
 ```
 
 8\. You should now be ready to work with the "cars" dataset.
 
 (a) Preview the data so that you can see the names of the columns. There are several possible functions to do this.
-(b) Determine the class of the first three columns using `spec()` or `typeof()`. Write your answer in a comment.
+(b) Determine the class of the first three columns using `spec()` or `typeof()`. Write your answer as a comment inside the R chunk below.
 
 ```{r}
 spec(cars)
@@ -106,7 +99,7 @@ spec(cars)
 
 9\. How many cars (rows) are in the dataset? How many variables (columns) are recorded for each car? 
 
-```{r q5}
+```{r}
 dim(cars)
 nrow(cars)
 ```
@@ -135,7 +128,6 @@ nrow(cars)
 cars <- cars %>% mutate(MonthlyPrice = VehBCost / 70)
 # OR
 cars <- mutate(cars, MonthlyPrice = VehBCost / 70)
-
 colnames(cars)
 ```
 
@@ -143,31 +135,40 @@ colnames(cars)
 
 ```{r}
 range( cars %>% pull(VehYear) )
-
 # OR
-
 car_range <- pull(cars, VehYear)
 range(car_range)
-
 # OR
-
 range(cars$VehYear)
 table(cars$VehYear)
 ```
 
 <span style="color:red"> The range is `r range( cars %>% pull(VehYear) )`. </span>
 
-13\. How many cars were from before 2004? What percent/proportion do these represent?
+13\. How many cars were from before 2004? What percent/proportion do these represent? Use:
 
-```{r, q7}
+- `filter()` and `nrow()`
+- `group_by()` and `summarize()` or
+- `sum()`
+
+```{r}
+# How many cars were from before 2004?
+nrow(cars %>% filter(VehYear < 2004)) 
+# OR
+cars %>% group_by(VehYear < 2004) %>% summarize(total = n())
+# OR
 sum(cars$VehYear < 2004)
-mean(cars$VehYear < 2004)
+# OR 
 table(cars$VehYear < 2004)
+# what percent/proportion do these represent?
+nrow(cars %>% filter(VehYear < 2004)) / nrow(cars)
+# OR
+mean(cars$VehYear < 2004)
 ```
 
-8) Drop any vehicles that cost less than or equal to $1500 ("VehBCost") or that have missing values. How many vehicles were removed?<br />
-**Hint:** `filter()` removes missing values.<br />
-**Use this reduced dataset (generated in question 8) for all subsequent questions (9 through 12).**
+<span style="color:red"> The percent of cars were from before 2004 is `r nrow(cars %>% filter(VehYear < 2004)) / nrow(cars) * 100`. </span>
+
+14\. How many different vehicle manufacturers/makes ("Make") are there?
 
 **Hint:** use `length()` with `unique()` or `table()`. Remember to `pull()` the right column.
 
@@ -181,10 +182,9 @@ length(unique(cars$Make))
 length(table(cars$Make))
 ```
 
-There are `r nrow(cars)` after filtering by price.
+<span style="color:red"> `r length(unique(cars$Make))` unique makes. </span>
 
-9) How many different vehicle a) manufacturers/makes ("Make"), b) models ("Model"), and c) sizes ("Size") are there?<br />
-**Hint:** use `table()` or `group_by()` with `tally()` or `summarize()`.
+15\. How many different vehicle models ("Model") are there?
 
 ```{r}
 cars %>% pull(Model) %>% unique() %>% length()
@@ -223,8 +223,7 @@ cars %>% filter(Color == "RED" & VehOdo < 30000) %>% count()
 sum(cars$Color == "RED" & cars$VehOdo < 30000)
 ```
 
-# b.	Are made by GMC and were purchased in Texas? 
-sum(cars$Make == "GMC" & cars$VNST == "TX")
+<span style="color:red"> A total of `r sum(cars$Color == "RED" & cars$VehOdo < 30000)` cars. </span>
 
 19\. How many vehicles are blue or red? use:
 
@@ -233,12 +232,13 @@ sum(cars$Make == "GMC" & cars$VNST == "TX")
 - `sum()`
 
 ```{r}
-sum(cars$Color == "BLUE" | cars$Color == "RED" )
-sum(cars$Color %in% c("BLUE","RED"))
-# OR
 cars %>% filter(Color == "BLUE" | Color == "RED" ) %>% count()
 # OR
 cars %>% filter(Color %in% c("BLUE","RED")) %>% count()
+# OR
+sum(cars$Color == "BLUE" | cars$Color == "RED" )
+# OR
+sum(cars$Color %in% c("BLUE","RED"))
 ```
 
 <span style="color:red"> A total of `r sum(cars$Color %in% c("BLUE","RED"))` cars. </span>
@@ -275,7 +275,6 @@ C\. Among red Nissans, what is the distribution of vehicle ages?
 
 ```{r}
 red_nissan <- cars %>% filter(Color == "RED" & Make == "NISSAN")
-
 red_nissan %>% group_by(VehicleAge) %>% select(VehicleAge) %>% table()
 # OR
 red_nissan <- cars %>% filter(Color == "RED" & Make == "NISSAN")
