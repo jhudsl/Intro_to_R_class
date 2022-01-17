@@ -49,6 +49,7 @@ output.
 | Base `R`| [`head()`](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/head)|`head(mtcars)`| Returns the top 6 rows of an object in the environment by default. You can specify how many rows you want by including the `n = `argument.|
 | Base `R`| [`tail()`](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/head)|`tail(mtcars)`| Returns the bottom 6 rows of an object in the environment by default. You can specify how many rows you want by including the `n =` argument.|
 
+<div style="page-break-after: always;"></div>
 
 ## Reproducibility
 
